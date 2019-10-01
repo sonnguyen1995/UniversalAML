@@ -1,11 +1,11 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const Sherpaa = require('./sherpaa-api');
-const sherpaa = new Sherpaa();
+const UniversalAML = require('./universal-aml');
+const universalAML = new UniversalAML();
 
-sherpaa.publicKey = '123';
-sherpaa.AMLProvider = 'Scorechain';
+universalAML.publicKey = '123';
+universalAML.AMLProvider = 'Scorechain';
 
 const app = express();
 
@@ -17,7 +17,7 @@ const port = process.env.PORT || 8080;
 const httpServer = require('http').createServer(app);
 
 app.get('/', (req, res, next) => {
-  // sherpaa.scoring({
+  // universalAML.scoring({
   //   scoringType: 'transaction',
   //   hash: 'testing',
   //   direction: 'incoming',
@@ -26,10 +26,10 @@ app.get('/', (req, res, next) => {
   //   }
   // });
   const token = req.query.token;
-  sherpaa.reports('GET', data => {
+  universalAML.reports('GET', data => {
     res.send(data)
   });
 });
 httpServer.listen(port, function () {
-  console.log(`sherpaa-server running on port ${port}.`);
+  console.log(`universalAML-server running on port ${port}.`);
 });

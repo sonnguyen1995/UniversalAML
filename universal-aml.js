@@ -7,12 +7,12 @@ const Ethereum = require('./ethereum-api');
 const bitcoin = new Bitcoin();
 const ethereum = new Ethereum();
 
-var Sherpaa = function (publicKey, AMLProvider) {
+var UniversalAML = function (publicKey, AMLProvider) {
   this.publicKey = publicKey;
   this.AMLProvider = AMLProvider;
 }
 
-Sherpaa.prototype.scoring = function ({
+UniversalAML.prototype.scoring = function ({
   scoringType,
   type,
   hash = '',
@@ -36,16 +36,16 @@ Sherpaa.prototype.scoring = function ({
   }
 }
 
-Sherpaa.prototype.reports = function(reportMethod, callback) {
+UniversalAML.prototype.reports = function (reportMethod, callback) {
   switch (this.AMLProvider) {
     case 'Scorechain': {
       if (this.publicKey === bitcoin.publicKey) {
         bitcoin.url = 'https://bitcoin.scorechain.com/api';
         bitcoin.reports(reportMethod, callback)
-      } 
+      }
       break;
     }
   }
 }
 
-module.exports = Sherpaa;
+module.exports = UniversalAML;
