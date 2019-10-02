@@ -5,13 +5,7 @@ var Ethereum = function (url) {
   this.url = url;
 }
 
-Ethereum.prototype.scoring = function ({
-  scoringType,
-  address = '',
-  tokenAddress = '',
-  hash = '',
-  direction = '',
-  callback }) {
+Ethereum.prototype.scoring = function ({ scoringType, address, tokenAddress, hash, direction, callback }) {
   switch (scoringType) {
     case 'address':
       if (address && !tokenAddress) {
