@@ -1,10 +1,8 @@
-require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const Bitcoin = require('../../coins/bitcoin-api');
+const Bitcoin = require('../coins/bitcoin');
 const UniversalAML = require('../../universal-aml');
 const bitcoin = new Bitcoin();
-const universalAML = new UniversalAML('123', 'Scorechain');
 
 const scoring = express();
 scoring.use(bodyParser.urlencoded({ extended: false }));
@@ -20,7 +18,9 @@ const getCoin = (req, res, next) => {
     next();
 }
 
+// http://localhost:8080/api/scorechain/scoring/coin/{publicKey}
 scoring.get('/coin/:publicKey', getCoin, (req, res, next) => {
+    const universalAML = new UniversalAML(req.params.publicKey, 'Scorechain');
     if (coin === 'bitcoin') {
         // http://localhost:8080/api/scorechain/scoring/transaction/{type}/{hash}?token={token}
         scoring.get(`/transaction/:type/:hash`, (req, res, next) => {
@@ -67,11 +67,13 @@ scoring.get('/coin/:publicKey', getCoin, (req, res, next) => {
         // http://localhost:8080/api/scorechain/scoring/utxos/{type}?token={token}
         scoring.post(`/utxos/:type`, (req, res, next) => {
             const type = req.params.type;
-            const txid = req.body.txid;
-            const vout = req.body.vout;
+            const body = {
+                txid: req.body.txid,
+                vout: req.body.vout,
+            }
             if (req.query.token === token) {
                 universalAML.scoring({
-                    scoringType: 'utxos', type: type, txid: txid, vout: vout, token: token, callback: data => {
+                    scoringType: 'utxos', type: type, body: body, token: token, callback: data => {
                         res.send(data)
                     }
                 })

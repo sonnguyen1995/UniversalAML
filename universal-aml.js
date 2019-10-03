@@ -1,8 +1,8 @@
 const http = require('http');
 const https = require('https');
 const _ = require('lodash');
-const Bitcoin = require('./coins/bitcoin-api');
-const Ethereum = require('./coins/ethereum-api');
+const Bitcoin = require('./scorechain/coins/bitcoin');
+const Ethereum = require('./scorechain/coins/ethereum');
 
 const bitcoin = new Bitcoin();
 const ethereum = new Ethereum();
@@ -32,7 +32,43 @@ UniversalAML.prototype.reports = function ({ reportMethod, body, token, callback
     case 'Scorechain': {
       if (this.publicKey === bitcoin.publicKey) {
         bitcoin.url = 'https://bitcoin.scorechain.com/api';
-        bitcoin.reports({ reportMethod, token: token, callback })
+        bitcoin.reports({ reportMethod, body: body, token: token, callback })
+      }
+      break;
+    }
+  }
+}
+
+UniversalAML.prototype.data = function ({ dataType, hash, address, token, callback }) {
+  switch (this.AMLProvider) {
+    case 'Scorechain': {
+      if (this.publicKey === bitcoin.publicKey) {
+        bitcoin.url = 'https://bitcoin.scorechain.com/api';
+        bitcoin.data({ dataType, hash: hash, address: address, token: token, callback })
+      }
+      break;
+    }
+  }
+}
+
+UniversalAML.prototype.customisation = function ({ token, callback }) {
+  switch (this.AMLProvider) {
+    case 'Scorechain': {
+      if (this.publicKey === bitcoin.publicKey) {
+        bitcoin.url = 'https://bitcoin.scorechain.com/api';
+        bitcoin.customisation({ token, callback });
+      }
+      break;
+    }
+  }
+}
+
+UniversalAML.prototype.alerts = function ({ alertMethod, body, token, callback }) {
+  switch (this.AMLProvider) {
+    case 'Scorechain': {
+      if (this.publicKey === bitcoin.publicKey) {
+        bitcoin.url = 'https://bitcoin.scorechain.com/api';
+        bitcoin.alerts({ alertMethod, body: body, token: token, callback })
       }
       break;
     }

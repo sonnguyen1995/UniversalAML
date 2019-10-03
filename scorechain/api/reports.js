@@ -1,14 +1,12 @@
-require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const Bitcoin = require('../../coins/bitcoin-api');
+const Bitcoin = require('../coins/bitcoin');
 const UniversalAML = require('../../universal-aml');
 const bitcoin = new Bitcoin();
-const universalAML = new UniversalAML('123', 'Scorechain');
 
-const report = express();
-report.use(bodyParser.urlencoded({ extended: false }));
-report.use(bodyParser.json());
+const reports = express();
+reports.use(bodyParser.urlencoded({ extended: false }));
+reports.use(bodyParser.json());
 
 var token = 'testToken'; // authorization token
 var coin = '';
@@ -20,9 +18,12 @@ const getCoin = (req, res, next) => {
     next();
 }
 
-report.get('/coin/:publicKey', getCoin, (req, res, next) => {
+// http://localhost:8080/api/scorechain/report/coin/{publicKey}
+reports.get('/coin/:publicKey', getCoin, (req, res, next) => {
+    const universalAML = new UniversalAML(req.params.publicKey, 'Scorechain');
     if (coin === 'bitcoin') {
-        report.get('/', (req, res, next) => {
+        // http://localhost:8080/api/scorechain/report?token={token}
+        reports.get('/', (req, res, next) => {
             if (req.query.token === token) {
                 universalAML.reports({
                     reportMethod: 'GET', token: token, callback: data => {
@@ -33,13 +34,13 @@ report.get('/coin/:publicKey', getCoin, (req, res, next) => {
                 res.send({ "error": "invalid token" })
             }
         })
-        report.post('/', (req, res, next) => {
+        // http://localhost:8080/api/scorechain/report?token={token}
+        reports.post('/', (req, res, next) => {
             const body = {
                 report_type: req.body.report_type,
                 entity_or_address: req.body.entity_or_address
                 // ...
             }
-            console.log(body)
             if (req.query.token === token) {
                 universalAML.reports({
                     reportMethod: 'POST', body: body, token: token, callback: data => {
@@ -50,7 +51,24 @@ report.get('/coin/:publicKey', getCoin, (req, res, next) => {
                 res.send({ "error": "invalid token" })
             }
         })
+        // http://localhost:8080/api/scorechain/report?token={token}
+        reports.delete('/', (req, res, next) => {
+            const body = {
+                id: req.body.id
+            }
+            if (req.query.token === token) {
+                universalAML.reports({
+                    reportMethod: 'DELETE', body: body, token: token, callback: data => {
+                        res.send(data)
+                    }
+                })
+            } else {
+                res.send({ "error": "invalid token" })
+            }
+        })
+    } else if (coin === 'ethereum') {
+        // ... 
     }
 })
 
-module.exports = report;
+module.exports = reports;

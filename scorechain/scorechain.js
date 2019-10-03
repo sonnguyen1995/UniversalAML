@@ -1,14 +1,16 @@
-require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const scoring = require('./api/scoring');
-const report = require('./api/report');
+const reports = require('./api/reports');
+const data = require('./api/data');
+const customisation = require('./api/customisation');
+const alerts = require('./api/alerts');
 
 const scorechain = express();
 
-scorechain.use(bodyParser.urlencoded({ extended: false }));
-scorechain.use(bodyParser.json());
 scorechain.use('/scoring', scoring);
-scorechain.use('/report', report);
+scorechain.use('/reports', reports);
+scorechain.use('/data', data);
+scorechain.use('/customisation', customisation);
+scorechain.use('/alerts', alerts);
 
 module.exports = scorechain;
