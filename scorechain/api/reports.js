@@ -18,48 +18,48 @@ const getCoin = (req, res, next) => {
     next();
 }
 
-// http://localhost:8080/api/scorechain/report/coin/{publicKey}
+// http://localhost:8080/api/scorechain/reports/coin/{publicKey}
 reports.get('/coin/:publicKey', getCoin, (req, res, next) => {
-    const universalAML = new UniversalAML(req.params.publicKey, 'Scorechain');
+    const universalAML = new UniversalAML({ publicKey: req.params.publicKey, AMLProvider: 'Scorechain' });
     if (coin === 'bitcoin') {
-        // http://localhost:8080/api/scorechain/report?token={token}
+        // http://localhost:8080/api/scorechain/reports?token={token}
         reports.get('/', (req, res, next) => {
             if (req.query.token === token) {
                 universalAML.reports({
-                    reportMethod: 'GET', token: token, callback: data => {
-                        res.send(data)
+                    reportMethod: 'GET', token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {
                 res.send({ "error": "invalid token" })
             }
         })
-        // http://localhost:8080/api/scorechain/report?token={token}
+        // http://localhost:8080/api/scorechain/reports?token={token}
         reports.post('/', (req, res, next) => {
-            const body = {
+            const data = {
                 report_type: req.body.report_type,
                 entity_or_address: req.body.entity_or_address
                 // ...
             }
             if (req.query.token === token) {
                 universalAML.reports({
-                    reportMethod: 'POST', body: body, token: token, callback: data => {
-                        res.send(data)
+                    reportMethod: 'POST', data: data, token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {
                 res.send({ "error": "invalid token" })
             }
         })
-        // http://localhost:8080/api/scorechain/report?token={token}
+        // http://localhost:8080/api/scorechain/reports?token={token}
         reports.delete('/', (req, res, next) => {
-            const body = {
+            const data = {
                 id: req.body.id
             }
             if (req.query.token === token) {
                 universalAML.reports({
-                    reportMethod: 'DELETE', body: body, token: token, callback: data => {
-                        res.send(data)
+                    reportMethod: 'DELETE', data: data, token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {

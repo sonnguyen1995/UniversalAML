@@ -5,9 +5,11 @@ var Bitcoin = function (url) {
   this.url = url;
 }
 
-Bitcoin.prototype.scoring = function ({ scoringType, type, hash, address, body, token, callback }) {
+Bitcoin.prototype.scoring = function ({ scoringType, data, token, callback }) {
   switch (scoringType) {
-    case 'transaction':
+    case 'transaction': {
+      const type = data.type;
+      const hash = data.hash;
       request.get(`${this.url}/scoring/transaction/${type}/${hash}?token=${token}`, (error, response, body) => {
         if (error) {
           callback(error)
@@ -17,7 +19,11 @@ Bitcoin.prototype.scoring = function ({ scoringType, type, hash, address, body, 
         }
       });
       break;
-    case 'address':
+    }
+
+    case 'address': {
+      const type = data.type;
+      const address = data.type;
       request.get(`${this.url}/scoring/address/${type}/${address}?token=${token}`, (error, response, body) => {
         if (error) {
           callback(error)
@@ -27,7 +33,11 @@ Bitcoin.prototype.scoring = function ({ scoringType, type, hash, address, body, 
         }
       });
       break;
-    case 'entity':
+    }
+
+    case 'entity': {
+      const type = data.type;
+      const address = data.address;
       request.get(`${this.url}/scoring/entity/${type}/${address}?token=${token}`, (error, response, body) => {
         if (error) {
           callback(error)
@@ -37,7 +47,14 @@ Bitcoin.prototype.scoring = function ({ scoringType, type, hash, address, body, 
         }
       });
       break;
-    case 'utxos':
+    }
+
+    case 'utxos': {
+      const type = data.type;
+      const body = {
+        'txid': data.txid,
+        'vout': data.vout
+      }
       request.post(`${this.url}/scoring/utxos/${type}?token=${token}`, { form: body }, (error, response, body) => {
         if (error) {
           callback(error)
@@ -47,11 +64,13 @@ Bitcoin.prototype.scoring = function ({ scoringType, type, hash, address, body, 
         }
       });
       break;
+    }
+
     default: 0
   }
 }
 
-Bitcoin.prototype.reports = function ({ reportMethod, body, token, callback }) {
+Bitcoin.prototype.reports = function ({ reportMethod, data, token, callback }) {
   switch (reportMethod) {
     case 'GET':
       request.get(`${this.url}/report?token=${token}`, (error, response, body) => {
@@ -63,8 +82,9 @@ Bitcoin.prototype.reports = function ({ reportMethod, body, token, callback }) {
         }
       });
       break;
+
     case 'POST':
-      request.post(`${this.url}/report?token=${token}`, { form: body }, (error, response, body) => {
+      request.post(`${this.url}/report?token=${token}`, { form: data }, (error, response, body) => {
         if (error) {
           callback(error)
         }
@@ -73,8 +93,9 @@ Bitcoin.prototype.reports = function ({ reportMethod, body, token, callback }) {
         }
       })
       break;
+
     case 'DELETE':
-      request.delete(`${this.url}/report?token=${token}`, { form: body }, (error, response, body) => {
+      request.delete(`${this.url}/report?token=${token}`, { form: data }, (error, response, body) => {
         if (error) {
           callback(error)
         }
@@ -86,9 +107,9 @@ Bitcoin.prototype.reports = function ({ reportMethod, body, token, callback }) {
   }
 }
 
-Bitcoin.prototype.data = function ({ dataType, hash, address, token, callback }) {
+Bitcoin.prototype.data = function ({ dataType, data, token, callback }) {
   switch (dataType) {
-    case 'status':
+    case 'status': {
       request.get(`${this.url}/status?token=${token}`, (error, response, body) => {
         if (error) {
           callback(error)
@@ -98,7 +119,10 @@ Bitcoin.prototype.data = function ({ dataType, hash, address, token, callback })
         }
       })
       break;
-    case 'transaction':
+    }
+
+    case 'transaction': {
+      const hash = data.hash;
       request.get(`${this.url}/tx/${hash}?token=${token}`, (error, response, body) => {
         if (error) {
           callback(error)
@@ -108,7 +132,10 @@ Bitcoin.prototype.data = function ({ dataType, hash, address, token, callback })
         }
       })
       break;
-    case 'address':
+    }
+
+    case 'address': {
+      const address = data.address;
       request.get(`${this.url}/address/${address}?token=${token}`, (error, response, body) => {
         if (error) {
           callback(error)
@@ -118,7 +145,10 @@ Bitcoin.prototype.data = function ({ dataType, hash, address, token, callback })
         }
       })
       break;
-    case 'entity':
+    }
+
+    case 'entity': {
+      const address = data.address;
       request.get(`${this.url}/entity/${address}?token=${token}`, (error, response, body) => {
         if (error) {
           callback(error)
@@ -128,6 +158,7 @@ Bitcoin.prototype.data = function ({ dataType, hash, address, token, callback })
         }
       })
       break;
+    }
   }
 }
 
@@ -142,7 +173,7 @@ Bitcoin.prototype.customisation = function ({ token, callback }) {
   })
 }
 
-Bitcoin.prototype.alerts = function ({ alertMethod, body, token, callback }) {
+Bitcoin.prototype.alerts = function ({ alertMethod, data, token, callback }) {
   switch (alertMethod) {
     case 'GET':
       request.get(`${this.url}/alerts?token=${token}`, (error, response, body) => {
@@ -154,8 +185,9 @@ Bitcoin.prototype.alerts = function ({ alertMethod, body, token, callback }) {
         }
       })
       break;
+
     case 'POST':
-      request.post(`${this.url}/alerts?token=${token}`, { form: body }, (error, response, body) => {
+      request.post(`${this.url}/alerts?token=${token}`, { form: data }, (error, response, body) => {
         if (error) {
           callback(error)
         }
@@ -164,8 +196,9 @@ Bitcoin.prototype.alerts = function ({ alertMethod, body, token, callback }) {
         }
       })
       break;
+
     case 'DELETE':
-      request.delete(`${this.url}/alerts?token=${token}`, { form: body }, (error, response, body) => {
+      request.delete(`${this.url}/alerts?token=${token}`, { form: data }, (error, response, body) => {
         if (error) {
           callback(error)
         }

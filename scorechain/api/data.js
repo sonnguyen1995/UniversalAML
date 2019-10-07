@@ -20,14 +20,14 @@ const getCoin = (req, res, next) => {
 
 // http://localhost:8080/api/scorechain/data/coin/{publicKey}
 data.get('/coin/:publicKey', getCoin, (req, res, next) => {
-    const universalAML = new UniversalAML(req.params.publicKey, 'Scorechain');
+    const universalAML = new ({publicKey: req.params.publicKey, AMLProvider: 'Scorechain'});
     if (coin === 'bitcoin') {
         // http://localhost:8080/api/scorechain/data/status?token={token}
         data.get('/status', (req, res, next) => {
             if (req.query.token === token) {
                 universalAML.data({
-                    dataType: 'status', token: token, callback: data => {
-                        res.send(data)
+                    dataType: 'status', token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {
@@ -36,11 +36,14 @@ data.get('/coin/:publicKey', getCoin, (req, res, next) => {
         })
         // http://localhost:8080/api/scorechain/data/tx/{hash}?token={token}
         data.get('/tx/:hash', (req, res, next) => {
+            const data = {
+                hash: req.params.hash
+            }
             const hash = req.params.hash;
             if (req.query.token === token) {
                 universalAML.data({
-                    dataType: 'transaction', hash: hash, token: token, callback: data => {
-                        res.send(data)
+                    dataType: 'transaction', data: data, token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {
@@ -49,11 +52,13 @@ data.get('/coin/:publicKey', getCoin, (req, res, next) => {
         })
         // http://localhost:8080/api/scorechain/data/address/{address}?token={token}
         data.get('/address/:address', (req, res, next) => {
-            const address = req.params.address;
+            const data = {
+                address: req.params.address
+            }
             if (req.query.token === token) {
                 universalAML.data({
-                    dataType: 'transaction', address: address, token: token, callback: data => {
-                        res.send(data)
+                    dataType: 'transaction', data: data, token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {
@@ -62,11 +67,13 @@ data.get('/coin/:publicKey', getCoin, (req, res, next) => {
         })
         // http://localhost:8080/api/scorechain/data/entity/{address}?token={token}
         data.get('/entity/:address', (req, res, next) => {
-            const address = req.params.address;
+            const data = {
+                address: req.params.address
+            }
             if (req.query.token === token) {
                 universalAML.data({
-                    dataType: 'entity', address: address, token: token, callback: data => {
-                        res.send(data)
+                    dataType: 'entity', data: data, token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {

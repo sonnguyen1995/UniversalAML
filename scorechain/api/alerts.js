@@ -19,13 +19,13 @@ const getCoin = (req, res, next) => {
 }
 
 alerts.get('/coin/:publicKey', getCoin, (req, res, next) => {
-    const universalAML = new UniversalAML(req.params.publicKey, 'Scorechain');
+    const universalAML = new UniversalAML({ publicKey: req.params.publicKey, AMLProvider: 'Scorechain' });
     if (coin === 'bitcoin') {
         alerts.get('/', (req, res, next) => {
             if (req.query.token === token) {
                 universalAML.alerts({
-                    alertMethod: 'GET', token: token, callback: data => {
-                        res.send(data)
+                    alertMethod: 'GET', token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {
@@ -33,17 +33,16 @@ alerts.get('/coin/:publicKey', getCoin, (req, res, next) => {
             }
         })
         alerts.post('/', (req, res, next) => {
-            const body = {
+            const data = {
                 type: req.body.type,
                 address: req.body.address,
                 entity_of_address: req.body.entity_of_address
                 // ...
             }
-            console.log(body)
             if (req.query.token === token) {
                 universalAML.alerts({
-                    alertMethod: 'POST', body: body, token: token, callback: data => {
-                        res.send(data)
+                    alertMethod: 'POST', data: data, token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {
@@ -51,13 +50,13 @@ alerts.get('/coin/:publicKey', getCoin, (req, res, next) => {
             }
         })
         alerts.delete('/', (req, res, next) => {
-            const body = {
+            const data = {
                 id: req.body.id
             }
             if (req.query.token === token) {
                 universalAML.alerts({
-                    alertMethod: 'DELETE', body: body, token: token, callback: data => {
-                        res.send(data)
+                    alertMethod: 'DELETE', data: data, token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {

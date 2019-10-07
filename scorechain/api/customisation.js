@@ -19,14 +19,14 @@ const getCoin = (req, res, next) => {
 }
 
 customisation.get('/coin/:publicKey', getCoin, (req, res, next) => {
-    const universalAML = new UniversalAML(req.params.publicKey, 'Scorechain');
+    const universalAML = new UniversalAML({publicKey: req.params.publicKey, AMLProvider: 'Scorechain'});
     if (coin === 'bitcoin') {
         // http://localhost:8080/api/scorechain/data/status?token={token}
         customisation.get('/scx', (req, res, next) => {
             if (req.query.token === token) {
                 universalAML.customisation({
-                    token: token, callback: data => {
-                        res.send(data)
+                    token: token, callback: callback => {
+                        res.send(callback)
                     }
                 })
             } else {
