@@ -65,6 +65,123 @@ UniversalAML.prototype.reports = function ({ reportMethod, reportType, data, tok
           })
           break;
         }
+
+        case 'createFullReport': {
+          const address = data.address;
+          const query = data.query ? `${data.query}` : '';
+          request.get(`https://api.coinfirm.com/v3/reports/aml/full/${address}${query}`, (error, response, body) => {
+            if (error) {
+              callback(error)
+            } else {
+              callback(response)
+            }
+          })
+          break;
+        }
+
+        case 'createEnhancedReport': {
+          const address = data.address;
+          const query = data.query ? `${data.query}` : '';
+          request.get(`https://api.coinfirm.com/v3/reports/aml/enhanced/${address}${query}`, (error, response, body) => {
+            if (error) {
+              callback(error)
+            } else {
+              callback(response)
+            }
+          })
+          break;
+        }
+
+        case 'getReport': {
+          const report_id = data.report_id;
+          const query = data.query ? `${data.query}` : '';
+          request.get(`https://api.coinfirm.com/v3/reports/aml/${report_id}${query}`, (error, response, body) => {
+            if (error) {
+              callback(error)
+            } else {
+              callback(response)
+            }
+          })
+          break;
+        }
+
+        case 'getPDFReport': {
+          const report_id = data.report_id;
+          const query = data.query ? `${data.query}` : '';
+          request.get(`https://api.coinfirm.com/v3/reports/aml/${report_id}/pdf${query}`, (error, response, body) => {
+            if (error) {
+              callback(error)
+            } else {
+              callback(response)
+            }
+          })
+          break;
+        }
+
+        case 'getBase64Report': {
+          const report_id = data.report_id;
+          request.get(`https://api.coinfirm.com/v3/reports/aml/${report_id}/base64`, (error, response, body) => {
+            if (error) {
+              callback(error)
+            } else {
+              callback(response)
+            }
+          })
+          break;
+        }
+
+        case 'getFinancialReport': {
+          const address = data.address;
+          const query = data.query ? `${data.query}` : '';
+          request.get(`https://api.coinfirm.com/v3/reports/financial/${address}${query}`, (error, response, next) => {
+            if (error) {
+              callback(error)
+            } else {
+              callback(response)
+            }
+          })
+          break;
+        }
+
+        case 'getTransactionForAddress': {
+          const report_id = data.report_id;
+          const query = data.query ? `${data.query}` : '';
+          request.get(`https://api.coinfirm.com/v3/reports/aml/transaction-history/${report_id}${query}`, (error, response, next) => {
+            if (error) {
+              callback(error)
+            } else {
+              callback(response)
+            }
+          })
+          break;
+        }
+
+        case 'getTransactionForToken': {
+          const report_id = data.report_id;
+          const token_name = data.token_name;
+          const query = data.query ? `${data.query}` : '';
+          request.get(`https://api.coinfirm.com/v3/reports/aml/transaction-history/${report_id}/${token_name}${query}`, (error, response, next) => {
+            if (error) {
+              callback(error)
+            } else {
+              callback(response)
+            }
+          })
+          break;
+        }
+
+        case 'getIndicators': {
+          const report_id = data.report_id;
+          const query = data.query ? `${data.query}` : '';
+          request.get(`https://api.coinfirm.com/v3/reports/aml/indicators/${report_id}${query}`, (error, response, body) => {
+            if (error) {
+              callback(error)
+            } else {
+              callback(response)
+            }
+          })
+          break;
+        }
       }
     }
   }
